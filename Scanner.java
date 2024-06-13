@@ -46,7 +46,9 @@ public class Scanner {
 	 */
 	private Symbol[] ssym;
 
-	// 输入流
+	/**
+	 * 输入流
+	 */
 	private BufferedReader in;
 
 	/**

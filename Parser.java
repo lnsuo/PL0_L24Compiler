@@ -2,15 +2,34 @@
  *　　语法分析器。这是PL/0分析器中最重要的部分，在语法分析的过程中穿插着语法错误检查和目标代码生成。
  */
 public class Parser {
-	private Scanner lex;					// 对词法分析器的引用
-	private Table table;					// 对符号表的引用
-	private Interpreter interp;				// 对目标代码生成器的引用
+	/**
+	 * 对词法分析器的引用
+	 */
+	private Scanner lex; 
+	/**
+	 * 对符号表的引用
+	 */
+	private Table table; 
+	/**
+	 * 对目标代码生成器的引用
+	 */
+	private Interpreter interp;
 	
 	private final int symnum = Symbol.values().length;
 	
-	// 表示声明开始的符号集合、表示语句开始的符号集合、表示因子开始的符号集合
 	// 实际上这就是声明、语句和因子的FIRST集合
-	private SymSet declbegsys, statbegsys, facbegsys;
+	/**
+	 * 表示声明开始的符号集合
+	 */
+	private SymSet declbegsys;
+	/**
+	 * 表示语句开始的符号集合
+	 */
+	private SymSet statbegsys;
+	/**
+	 * 表示因子开始的符号集合
+	 */
+	private SymSet facbegsys;
 	
 	/**
 	 * 当前符号，由nextsym()读入
