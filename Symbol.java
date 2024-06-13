@@ -1,5 +1,5 @@
 /**
- *¡¡¸÷ÖÖ·ûºÅµÄ±àÂë
+ *ã€€å„ç§ç¬¦å·çš„ç¼–ç 
  */
 public enum Symbol {
 	nul, ident, number, plus, minus, times, slash,
