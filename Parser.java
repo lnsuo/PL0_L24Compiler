@@ -166,8 +166,7 @@ public class Parser {
 				// the original do...while(sym == ident) is problematic, thanks to calculous
 				// do {
 				parseVarDeclaration(lev);
-				while (sym == Symbol.comma)
-				{
+				while (sym == Symbol.comma) {
 					nextSym();
 					parseVarDeclaration(lev);
 				}

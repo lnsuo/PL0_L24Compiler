@@ -13,12 +13,30 @@ public class Table {
 	 *　　即C语言版本中的tablestruct结构。
 	 */
 	public class Item {
-		String name;		// 名字
-		Objekt kind;		// 类型：const, var or procedure
-		int val;			// 数值，仅const使用
-		int level;			// 所处层，var和procedure使用
-		int adr;			// 地址，var和procedure使用
-		int size;			// 需要分配的数据区空间, 仅procedure使用
+		/**
+		 * 名字
+		 */
+		String name;
+		/**
+		 * 类型：const, var or procedure
+		 */
+		Objekt kind;
+		/**
+		 * 数值，仅const使用
+		 */
+		int val;
+		/**
+		 * 所处层，var和procedure使用
+		 */
+		int level;
+		/**
+		 * 地址，var和procedure使用
+		 */
+		int adr;
+		/**
+		 * 需要分配的数据区空间, 仅procedure使用
+		 */
+		int size; 
 	}
 	
 	/**
