@@ -65,7 +65,7 @@ public class Parser {
 		statbegsys.set(Symbol.callsym);
 		statbegsys.set(Symbol.ifsym);
 		statbegsys.set(Symbol.whilesym);
-		statbegsys.set(Symbol.readsym);			// thanks to elu
+		statbegsys.set(Symbol.readsym);
 		statbegsys.set(Symbol.writesym);
 
 		// 设置因子开始符号集
@@ -73,7 +73,6 @@ public class Parser {
 		facbegsys.set(Symbol.ident);
 		facbegsys.set(Symbol.number);
 		facbegsys.set(Symbol.lparen);
-
 	}
 	
 	/**

@@ -8,7 +8,7 @@ public class SymSet extends BitSet {
 	/**
 	 * 这个域没有特别意义 
 	 */
-	private static final long serialVersionUID = 8136959240158320958L;
+	private static final long serialVersionUID = 10215102415L;
 
 	/**
 	 * 构造一个符号集合

@@ -101,9 +101,9 @@ public class PL0 {
 	public PL0(BufferedReader fin) {
 		// 各部件的构造函数中都含有C语言版本的 init() 函数的一部分代码
 		lex = new Scanner(fin);
-		parser = new Parser(lex, table, interp);
 		interp = new Interpreter();
 		table = new Table();
+		parser = new Parser(lex, table, interp);
 	}
 
 	/**

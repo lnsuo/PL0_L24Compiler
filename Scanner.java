@@ -138,6 +138,7 @@ public class Scanner {
 		// 但是你的助教认为下面的写法能够更加清楚地看出这个函数的处理逻辑
 		while (Character.isWhitespace(ch))		// 跳过所有空白字符
 			getch();
+
 		if (ch >= 'a' && ch <= 'z') {
 			// 关键字或者一般标识符
 			matchKeywordOrIdentifier();
