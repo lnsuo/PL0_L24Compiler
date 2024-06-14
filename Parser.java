@@ -145,7 +145,7 @@ public class Parser {
 			// <常量说明部分>
 			if (sym == Symbol.constsym) {
 				nextSym();
-				// the original do...while(sym == ident) is problematic, thanks to calculous
+				// the original do...while(sym == ident) is problematic
 				// do
 				parseConstDeclaration(lev);
 				while (sym == Symbol.comma) {
@@ -163,7 +163,7 @@ public class Parser {
 			// <变量说明部分>
 			if (sym == Symbol.varsym) {
 				nextSym();
-				// the original do...while(sym == ident) is problematic, thanks to calculous
+				// the original do...while(sym == ident) is problematic
 				// do {
 				parseVarDeclaration(lev);
 				while (sym == Symbol.comma) {
@@ -469,7 +469,7 @@ public class Parser {
 				} else {
 					Table.Item item = table.get(i);
 					if (item.kind != Objekt.variable) {
-						Err.report(32);		// read()中的标识符不是变量, thanks to amd
+						Err.report(32);		// read()中的标识符不是变量
 					} else {
 						interp.gen(Fct.OPR, 0, 16);
 						interp.gen(Fct.STO, lev-item.level, item.adr);
@@ -599,7 +599,6 @@ public class Parser {
 		
 		test(facbegsys, fsys, 24);			// 检测因子的开始符号
 		// the original while... is problematic: var1(var2+var3)
-		// thanks to macross
 		// while(inset(sym, facbegsys))
 		if (facbegsys.get(sym)) {
 			if (sym == Symbol.ident) {			// 因子为常量或变量

@@ -34,4 +34,8 @@ public class SymSet extends BitSet {
 	public boolean get(Symbol s) {
 		return get(s.ordinal());
 	}
+
+	public String toString() {
+		return super.toString();
+	}	
 }

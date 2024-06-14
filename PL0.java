@@ -131,6 +131,8 @@ public class PL0 {
 			System.exit(0);
 				
 		// 编译成功是指完成编译过程并且没有错误
+		System.out.println("Err.err = " + Err.err);
+		System.out.println("abort = " + abort);
 		return (Err.err == 0);
 	}
 
