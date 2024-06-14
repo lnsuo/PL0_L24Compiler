@@ -129,7 +129,9 @@ public class Interpreter {
 					break;
 				case 9:
 					t--;
+					System.out.println("Before: s[t-1] = " + s[t-1] + ", s[t] = " + s[t]);
 					s[t-1] = (s[t-1] != s[t] ? 1 : 0);
+					System.out.println("After: s[t-1] = " + s[t-1]);
 					break;
 				case 10:
 					t--;
@@ -195,6 +197,8 @@ public class Interpreter {
 					p = i.a;
 				break;
 			}
+
+			System.out.println("p = " + p);
 		} while (p != 0);
 	}
 	
