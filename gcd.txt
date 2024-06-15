@@ -13,7 +13,8 @@ begin
         if odd b then z:=z+a;
         a := 2 * a;
         b := b / 2;
-    end
+    end;
+    write(z);
 end;
 
 procedure divide;
@@ -31,7 +32,8 @@ begin
             r := r - w;
             q := q + 1;
         end;
-    end
+    end;
+    write(w);
 end;
 
 procedure gcd;
@@ -41,9 +43,10 @@ begin
     g := y;
     while f#g do
     begin
-        if f > g then g := g - f;
+        if f < g then g := g - f;
         if g < f then f := f - g;
-    end
+    end;
+    write(f, g);
 end;
 
 begin

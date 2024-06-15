@@ -430,13 +430,20 @@ public class Parser {
 
 		nextSym();
 		if (sym == Symbol.lparen) {
+			int cnt = 0;
 			do {
+				if (cnt > 0) {
+					interp.gen(Fct.OPR, 0, 17);
+				}
+
 				nextSym();
 				nxtlev = (SymSet) fsys.clone();
 				nxtlev.set(Symbol.rparen);
 				nxtlev.set(Symbol.comma);
 				parseExpression(nxtlev, lev);
 				interp.gen(Fct.OPR, 0, 14);
+
+				cnt++;
 			} while (sym == Symbol.comma);
 			
 			if (sym == Symbol.rparen)
