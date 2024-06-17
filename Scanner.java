@@ -205,14 +205,8 @@ public class Scanner {
 		// 请注意这里的写法跟Wirth的有点不同
 		switch (ch) {
 		case ':':		// 赋值符号
+			sym = Symbol.eql;
 			getch();
-			if (ch == '=') {
-				sym = Symbol.becomes;
-				getch();
-			} else {
-				// 不能识别的符号
-				sym = Symbol.nul;
-			}
 			break;
 		case '<':		// 小于或者小于等于
 			getch();

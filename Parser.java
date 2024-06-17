@@ -142,6 +142,7 @@ public class Parser {
 	 */
 	public void parseStmtList(int lev, SymSet fsys) {
 		// <分程序> := [<常量说明部分>][<变量说明部分>][<过程说明部分>]<语句>
+		// <stmt_list> = {<变量声明> ";"}{<stmt> ";"}
 		
 		int dx0, tx0, cx0;				// 保留初始dx，tx和cx
 		SymSet nxtlev = new SymSet(symnum);
@@ -263,9 +264,7 @@ public class Parser {
 	void parseConstDeclaration(int lev) {
 		if (sym == Symbol.ident) {
 			nextSym();
-			if (sym == Symbol.eql || sym == Symbol.becomes) {
-				if (sym == Symbol.becomes) 
-					Err.report(1);			// 把 = 写成了 :=
+			if (sym == Symbol.eql) {
 				nextSym();
 				if (sym == Symbol.number) {
 					table.enter(Objekt.constant, lev, dx);
@@ -309,6 +308,12 @@ public class Parser {
 		case ident:
 			parseAssignStatement(fsys, lev);
 			break;
+		case ifsym:
+			parseIfStatement(fsys, lev);
+			break;
+		case whilesym:
+			parseWhileStatement(fsys, lev);
+			break;
 		case scansym:
 			parseScanStatement(fsys, lev);
 			break;
@@ -318,14 +323,8 @@ public class Parser {
 		case callsym:
 			parseCallStatement(fsys, lev);
 			break;
-		case ifsym:
-			parseIfStatement(fsys, lev);
-			break;
 		case beginsym:
 			parseBeginStatement(fsys, lev);
-			break;
-		case whilesym:
-			parseWhileStatement(fsys, lev);
 			break;
 		default:
 			nxtlev = new SymSet(symnum);
@@ -442,8 +441,6 @@ public class Parser {
 	 * @param lev 当前层次
 	 */
 	private void parsePrintStatement(SymSet fsys, int lev) {
-		System.out.println("In Print");
-
 		SymSet nxtlev;
 
 		nextSym();
@@ -530,10 +527,10 @@ public class Parser {
 			Table.Item item = table.get(i);
 			if (item.kind == Objekt.variable) {
 				nextSym();
-				if (sym == Symbol.becomes)
+				if (sym == Symbol.eql)
 					nextSym();
 				else
-					Err.report(13);					// 没有检测到赋值符号
+					Err.report(13);					// 没有检测到等号
 				nxtlev = (SymSet) fsys.clone();
 				parseExpression(nxtlev, lev);
 				// parseExpression将产生一系列指令，但最终结果将会保存在栈顶，执行sto命令完成赋值
