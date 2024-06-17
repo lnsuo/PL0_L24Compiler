@@ -66,7 +66,7 @@ public class Parser {
 		statbegsys.set(Symbol.whilesym);
 		statbegsys.set(Symbol.scansym);
 		statbegsys.set(Symbol.printsym);
-		statbegsys.set(Symbol.beginsym);
+		statbegsys.set(Symbol.lbrace);
 		statbegsys.set(Symbol.callsym);
 
 		// 设置因子开始符号集
@@ -84,22 +84,15 @@ public class Parser {
 		// <program> = "main" "{" <stmt_list> "}"
 
 		nextSym();		// 前瞻分析需要预先读入一个符号
-		if (sym != Symbol.mainsym) {
-			Err.report(101);
-		}
 
-		nextSym();
-		if (sym != Symbol.lbrace) {
-			Err.report(101);
-		}
-
+		checkNextSymbol(Symbol.mainsym, 101);
+		checkNextSymbol(Symbol.lbrace, 102);
 
 		SymSet nxtlev = new SymSet(symnum);
 		nxtlev.or(declbegsys);
 		nxtlev.or(statbegsys);
 		nxtlev.set(Symbol.rbrace);
 
-		nextSym();
 		parseStmtList(0, nxtlev);
 		
 		if (sym != Symbol.rbrace)
@@ -225,8 +218,8 @@ public class Parser {
 			
 		// 分析<语句>
 		nxtlev = (SymSet) fsys.clone();		// 每个后跟符号集和都包含上层后跟符号集和，以便补救
-		nxtlev.set(Symbol.semicolon);		// 语句后跟符号为分号或end
-		nxtlev.set(Symbol.endsym);
+		nxtlev.set(Symbol.semicolon);		// 语句后跟符号为分号或'}'
+		nxtlev.set(Symbol.rbrace);
 		parseStatement(nxtlev, lev);
 		interp.gen(Fct.OPR, 0, 0);		// 每个过程出口都要使用的释放数据段指令
 		
@@ -305,8 +298,8 @@ public class Parser {
 		case callsym:
 			parseCallStatement(fsys, lev);
 			break;
-		case beginsym:
-			parseBeginStatement(fsys, lev);
+		case lbrace:
+			parseBraceStatement(fsys, lev);
 			break;
 		default:
 			nxtlev = new SymSet(symnum);
@@ -328,7 +321,13 @@ public class Parser {
 		nextSym();
 		nxtlev = (SymSet) fsys.clone();
 		nxtlev.set(Symbol.dosym);				// 后跟符号为do
+
+		checkNextSymbol(Symbol.lparen, 111);
+
 		parseBoolExpr(nxtlev, lev);			// 分析<条件>
+
+		checkNextSymbol(Symbol.rparen, 112);
+
 		cx2 = interp.cx;						// 保存循环体的结束的下一个位置
 		interp.gen(Fct.JPC, 0, 0);				// 生成条件跳转，但跳出循环的地址未知
 		if (sym == Symbol.dosym)
@@ -345,26 +344,23 @@ public class Parser {
 	 * @param fsys 后跟符号集
 	 * @param lev 当前层次
 	 */
-	private void parseBeginStatement(SymSet fsys, int lev) {
+	private void parseBraceStatement(SymSet fsys, int lev) {
 		SymSet nxtlev;
 		
 		nextSym();
 		nxtlev = (SymSet) fsys.clone();
 		nxtlev.set(Symbol.semicolon);
-		nxtlev.set(Symbol.endsym);
+		nxtlev.set(Symbol.rbrace);
 		parseStatement(nxtlev, lev);
 		// 循环分析{; <语句>}，直到下一个符号不是语句开始符号或收到end
 		while (statbegsys.get(sym) || sym == Symbol.semicolon) {
-			if (sym == Symbol.semicolon)
-				nextSym();
-			else
-				Err.report(10);					// 缺少分号
+			checkNextSymbol(Symbol.semicolon, 121);
+
 			parseStatement(nxtlev, lev);
 		}
-		if (sym == Symbol.endsym)
-			nextSym();
-		else
-			Err.report(17);						// 缺少end或分号
+
+		System.out.println("BraceStmt: sym = " + sym);
+		checkNextSymbol(Symbol.rbrace, 122);
 	}
 
 	/**
@@ -380,11 +376,15 @@ public class Parser {
 		nxtlev = (SymSet) fsys.clone();
 		nxtlev.set(Symbol.thensym);				// 后跟符号为then或do ???
 		nxtlev.set(Symbol.dosym);
+
+		checkNextSymbol(Symbol.lparen, 131);
+
 		parseBoolExpr(nxtlev, lev);			// 分析<条件>
-		if (sym == Symbol.thensym)
-			nextSym();
-		else
-			Err.report(16);						// 缺少then
+
+		checkNextSymbol(Symbol.rparen, 132);
+
+		checkNextSymbol(Symbol.thensym, 133);
+
 		cx1 = interp.cx;						// 保存当前指令地址
 		interp.gen(Fct.JPC, 0, 0);				// 生成条件跳转指令，跳转地址未知，暂时写0
 		parseStatement(fsys, lev);				// 处理then后的语句
@@ -701,6 +701,14 @@ public class Parser {
 			} else {
 				Err.report(20);
 			}
+		}
+	}
+
+	private void checkNextSymbol(Symbol s, int errcode) {
+		if (sym == s) {
+			nextSym();
+		} else {
+			Err.report(errcode);
 		}
 	}
 }
