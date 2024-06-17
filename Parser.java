@@ -141,7 +141,7 @@ public class Parser {
 	 * @param fsys 当前模块后跟符号集
 	 */
 	public void parseStmtList(int lev, SymSet fsys) {
-		// <分程序> := [<常量说明部分>][<变量说明部分>][<过程说明部分>]<语句>
+		// <分程序> := [<变量说明部分>][<过程说明部分>]<语句>
 		// <stmt_list> = {<变量声明> ";"}{<stmt> ";"}
 		
 		int dx0, tx0, cx0;				// 保留初始dx，tx和cx
@@ -159,24 +159,6 @@ public class Parser {
 		
 		// 分析<说明部分>
 		do {
-			// <常量说明部分>
-			if (sym == Symbol.constsym) {
-				nextSym();
-				// the original do...while(sym == ident) is problematic
-				// do
-				parseConstDeclaration(lev);
-				while (sym == Symbol.comma) {
-					nextSym();
-					parseConstDeclaration(lev);
-				}
-				
-				if (sym == Symbol.semicolon)
-					nextSym();
-				else
-					Err.report(5);				// 漏掉了逗号或者分号
-				// } while (sym == ident);
-			}
-			
 			// <变量说明部分>
 			if (sym == Symbol.varsym) {
 				nextSym();
@@ -346,7 +328,7 @@ public class Parser {
 		nextSym();
 		nxtlev = (SymSet) fsys.clone();
 		nxtlev.set(Symbol.dosym);				// 后跟符号为do
-		parseCondition(nxtlev, lev);			// 分析<条件>
+		parseBoolExpr(nxtlev, lev);			// 分析<条件>
 		cx2 = interp.cx;						// 保存循环体的结束的下一个位置
 		interp.gen(Fct.JPC, 0, 0);				// 生成条件跳转，但跳出循环的地址未知
 		if (sym == Symbol.dosym)
@@ -391,8 +373,6 @@ public class Parser {
 	 * @param lev 当前层次
 	 */
 	private void parseIfStatement(SymSet fsys, int lev) {
-		System.out.println("In If");
-
 		int cx1;
 		SymSet nxtlev;
 		
@@ -400,7 +380,7 @@ public class Parser {
 		nxtlev = (SymSet) fsys.clone();
 		nxtlev.set(Symbol.thensym);				// 后跟符号为then或do ???
 		nxtlev.set(Symbol.dosym);
-		parseCondition(nxtlev, lev);			// 分析<条件>
+		parseBoolExpr(nxtlev, lev);			// 分析<条件>
 		if (sym == Symbol.thensym)
 			nextSym();
 		else
@@ -673,7 +653,7 @@ public class Parser {
 	 * @param fsys 后跟符号集
 	 * @param lev 当前层次
 	 */
-	private void parseCondition(SymSet fsys, int lev) {
+	private void parseBoolExpr(SymSet fsys, int lev) {
 		Symbol relop;
 		SymSet nxtlev;
 		
