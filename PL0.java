@@ -116,8 +116,8 @@ public class PL0 {
 		try {
 			PL0.fa = new PrintStream("fa.tmp");
 			PL0.fas = new PrintStream("fas.tmp");
-			parser.nextSym();		// 前瞻分析需要预先读入一个符号
-			parser.parse();			// 开始语法分析过程（连同语法检查、目标代码生成）
+
+			parser.start();			// 开始语法分析过程（连同语法检查、目标代码生成）
 		} catch (Error e) {
 			// 如果是发生严重错误则直接中止
 			abort = true;

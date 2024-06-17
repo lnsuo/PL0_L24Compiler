@@ -58,15 +58,16 @@ public class Parser {
 		declbegsys.set(Symbol.constsym);
 		declbegsys.set(Symbol.varsym);
 		declbegsys.set(Symbol.procsym);
+		declbegsys.set(Symbol.strsym);
 
 		// 设置语句开始符号集
 		statbegsys = new SymSet(symnum);
-		statbegsys.set(Symbol.beginsym);
-		statbegsys.set(Symbol.callsym);
 		statbegsys.set(Symbol.ifsym);
 		statbegsys.set(Symbol.whilesym);
 		statbegsys.set(Symbol.scansym);
 		statbegsys.set(Symbol.printsym);
+		statbegsys.set(Symbol.beginsym);
+		statbegsys.set(Symbol.callsym);
 
 		// 设置因子开始符号集
 		facbegsys = new SymSet(symnum);
@@ -79,14 +80,29 @@ public class Parser {
 	 * 启动语法分析过程，此前必须先调用一次nextsym()
 	 * @see #nextSym()
 	 */
-	public void parse() {
+	public void start() {
+		// <program> = "main" "{" <stmt_list> "}"
+
+		nextSym();		// 前瞻分析需要预先读入一个符号
+		if (sym != Symbol.mainsym) {
+			Err.report(101);
+		}
+
+		nextSym();
+		if (sym != Symbol.lbrace) {
+			Err.report(101);
+		}
+
+
 		SymSet nxtlev = new SymSet(symnum);
 		nxtlev.or(declbegsys);
 		nxtlev.or(statbegsys);
-		nxtlev.set(Symbol.period);
-		parseBlock(0, nxtlev);
+		nxtlev.set(Symbol.rbrace);
+
+		nextSym();
+		parseStmtList(0, nxtlev);
 		
-		if (sym != Symbol.period)
+		if (sym != Symbol.rbrace)
 			Err.report(9);
 	}
 	
@@ -124,7 +140,7 @@ public class Parser {
 	 * @param lev 当前分程序所在层
 	 * @param fsys 当前模块后跟符号集
 	 */
-	public void parseBlock(int lev, SymSet fsys) {
+	public void parseStmtList(int lev, SymSet fsys) {
 		// <分程序> := [<常量说明部分>][<变量说明部分>][<过程说明部分>]<语句>
 		
 		int dx0, tx0, cx0;				// 保留初始dx，tx和cx
@@ -195,7 +211,7 @@ public class Parser {
 				
 				nxtlev = (SymSet) fsys.clone();
 				nxtlev.set(Symbol.semicolon);
-				parseBlock(lev+1, nxtlev);
+				parseStmtList(lev+1, nxtlev);
 				
 				if (sym == Symbol.semicolon) {
 					nextSym();

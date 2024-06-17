@@ -86,6 +86,8 @@ public class Scanner {
 		ssym['.'] = Symbol.period;
 		ssym['#'] = Symbol.neq;
 		ssym[';'] = Symbol.semicolon;
+		ssym['{'] = Symbol.lbrace;
+		ssym['}'] = Symbol.rbrace;
 		
 		// 设置保留字名字,按照字母顺序，便于折半查找
 		word = new String[] {"begin", "call", "const", "do", "end", "if", "main",
@@ -99,9 +101,7 @@ public class Scanner {
 		wsym[3] = Symbol.dosym;
 		wsym[4] = Symbol.endsym;
 		wsym[5] = Symbol.ifsym;
-
 		wsym[6] = Symbol.mainsym;
-
 		wsym[7] = Symbol.oddsym;
 		wsym[8] = Symbol.printsym;
 		wsym[9] = Symbol.procsym;
