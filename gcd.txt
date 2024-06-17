@@ -14,7 +14,7 @@ begin
         a := 2 * a;
         b := b / 2;
     end;
-    write(z);
+    print(z);
 end;
 
 procedure divide;
@@ -33,7 +33,7 @@ begin
             q := q + 1;
         end;
     end;
-    write(w);
+    print(w);
 end;
 
 procedure gcd;
@@ -46,7 +46,7 @@ begin
         if f < g then g := g - f;
         if g < f then f := f - g;
     end;
-    write(f, g);
+    print(f, g);
 end;
 
 begin

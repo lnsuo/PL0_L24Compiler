@@ -88,8 +88,8 @@ public class Scanner {
 		ssym[';'] = Symbol.semicolon;
 		
 		// 设置保留字名字,按照字母顺序，便于折半查找
-		word = new String[] {"begin", "call", "const", "do", "end", "if",
-			"odd", "procedure", "read", "then", "var", "while", "write"};
+		word = new String[] {"begin", "call", "const", "do", "end", "if", "main",
+			"odd", "print", "procedure", "scan", "then", "var", "while"};
 		
 		// 设置保留字符号
 		wsym = new Symbol[PL0.norw];
@@ -99,13 +99,16 @@ public class Scanner {
 		wsym[3] = Symbol.dosym;
 		wsym[4] = Symbol.endsym;
 		wsym[5] = Symbol.ifsym;
-		wsym[6] = Symbol.oddsym;
-		wsym[7] = Symbol.procsym;
-		wsym[8] = Symbol.readsym;
-		wsym[9] = Symbol.thensym;
-		wsym[10] = Symbol.varsym;
-		wsym[11] = Symbol.whilesym;
-		wsym[12] = Symbol.writesym;
+
+		wsym[6] = Symbol.mainsym;
+
+		wsym[7] = Symbol.oddsym;
+		wsym[8] = Symbol.printsym;
+		wsym[9] = Symbol.procsym;
+		wsym[10] = Symbol.scansym;
+		wsym[11] = Symbol.thensym;
+		wsym[12] = Symbol.varsym;
+		wsym[13] = Symbol.whilesym;
 	}
 	
 	/**
@@ -165,6 +168,7 @@ public class Scanner {
 		id = sb.toString();
 		
 		// 然后搜索是不是保留字（请注意使用的是什么搜索方法）
+		// System.out.println("id: " + id);
 		i = java.util.Arrays.binarySearch(word, id);
 		
 		// 最后形成符号信息

@@ -65,8 +65,8 @@ public class Parser {
 		statbegsys.set(Symbol.callsym);
 		statbegsys.set(Symbol.ifsym);
 		statbegsys.set(Symbol.whilesym);
-		statbegsys.set(Symbol.readsym);
-		statbegsys.set(Symbol.writesym);
+		statbegsys.set(Symbol.scansym);
+		statbegsys.set(Symbol.printsym);
 
 		// 设置因子开始符号集
 		facbegsys = new SymSet(symnum);
@@ -293,11 +293,11 @@ public class Parser {
 		case ident:
 			parseAssignStatement(fsys, lev);
 			break;
-		case readsym:
-			parseReadStatement(fsys, lev);
+		case scansym:
+			parseScanStatement(fsys, lev);
 			break;
-		case writesym:
-			parseWriteStatement(fsys, lev);
+		case printsym:
+			parsePrintStatement(fsys, lev);
 			break;
 		case callsym:
 			parseCallStatement(fsys, lev);
@@ -425,7 +425,9 @@ public class Parser {
 	 * @param fsys 后跟符号集
 	 * @param lev 当前层次
 	 */
-	private void parseWriteStatement(SymSet fsys, int lev) {
+	private void parsePrintStatement(SymSet fsys, int lev) {
+		System.out.println("In Print");
+
 		SymSet nxtlev;
 
 		nextSym();
@@ -449,7 +451,7 @@ public class Parser {
 			if (sym == Symbol.rparen)
 				nextSym();
 			else
-				Err.report(33);				// write()中应为完整表达式
+				Err.report(33);				// print()中应为完整表达式
 		}
 		interp.gen(Fct.OPR, 0, 15);
 	}
@@ -459,7 +461,7 @@ public class Parser {
 	 * @param fsys 后跟符号集
 	 * @param lev 当前层次
 	 */
-	private void parseReadStatement(SymSet fsys, int lev) {
+	private void parseScanStatement(SymSet fsys, int lev) {
 		int i;
 		
 		nextSym();
