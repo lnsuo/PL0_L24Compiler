@@ -93,7 +93,7 @@ public class Parser {
 		nxtlev.or(statbegsys);
 		nxtlev.set(Symbol.rbrace);
 
-		parseStmtList(0, nxtlev);
+		parseStmtList(0, nxtlev, false);
 		
 		if (sym != Symbol.rbrace)
 			Err.report(9);
@@ -133,7 +133,7 @@ public class Parser {
 	 * @param lev 当前分程序所在层
 	 * @param fsys 当前模块后跟符号集
 	 */
-	public void parseStmtList(int lev, SymSet fsys) {
+	public void parseStmtList(int lev, SymSet fsys, boolean haveBrace) {
 		// <分程序> := [<变量说明部分>][<过程说明部分>]<语句>
 		// <stmt_list> = {<变量声明> ";"}{<stmt> ";"}
 		
@@ -155,19 +155,13 @@ public class Parser {
 			// <变量说明部分>
 			if (sym == Symbol.varsym) {
 				nextSym();
-				// the original do...while(sym == ident) is problematic
-				// do {
 				parseVarDeclaration(lev);
 				while (sym == Symbol.comma) {
 					nextSym();
 					parseVarDeclaration(lev);
 				}
-				
-				if (sym == Symbol.semicolon)
-					nextSym();
-				else
-					Err.report(5);				// 漏掉了逗号或者分号
-				// } while (sym == ident);
+
+				checkNextSymbol(Symbol.semicolon, 5);
 			}
 			
 			// <过程说明部分>
@@ -180,14 +174,11 @@ public class Parser {
 					Err.report(4);				// procedure后应为标识符
 				}
 
-				if (sym == Symbol.semicolon)
-					nextSym();
-				else
-					Err.report(5);				// 漏掉了分号
+				checkNextSymbol(Symbol.startsym, 5);
 				
 				nxtlev = (SymSet) fsys.clone();
 				nxtlev.set(Symbol.semicolon);
-				parseStmtList(lev+1, nxtlev);
+				parseStmtList(lev+1, nxtlev, true);
 				
 				if (sym == Symbol.semicolon) {
 					nextSym();
@@ -220,7 +211,7 @@ public class Parser {
 		nxtlev = (SymSet) fsys.clone();		// 每个后跟符号集和都包含上层后跟符号集和，以便补救
 		nxtlev.set(Symbol.semicolon);		// 语句后跟符号为分号或'}'
 		nxtlev.set(Symbol.rbrace);
-		parseStatement(nxtlev, lev);
+		parseBraceStatement(nxtlev, lev, haveBrace);
 		interp.gen(Fct.OPR, 0, 0);		// 每个过程出口都要使用的释放数据段指令
 		
 		nxtlev = new SymSet(symnum);	// 分程序没有补救集合
@@ -299,7 +290,7 @@ public class Parser {
 			parseCallStatement(fsys, lev);
 			break;
 		case lbrace:
-			parseBraceStatement(fsys, lev);
+			parseBraceStatement(fsys, lev, true);
 			break;
 		default:
 			nxtlev = new SymSet(symnum);
@@ -330,11 +321,9 @@ public class Parser {
 
 		cx2 = interp.cx;						// 保存循环体的结束的下一个位置
 		interp.gen(Fct.JPC, 0, 0);				// 生成条件跳转，但跳出循环的地址未知
-		if (sym == Symbol.dosym)
-			nextSym();
-		else
-			Err.report(18);						// 缺少do
+
 		parseStatement(fsys, lev);				// 分析<语句>
+
 		interp.gen(Fct.JMP, 0, cx1);			// 回头重新判断条件
 		interp.code[cx2].a = interp.cx;			// 反填跳出循环的地址，与<条件语句>类似
 	}
@@ -344,10 +333,12 @@ public class Parser {
 	 * @param fsys 后跟符号集
 	 * @param lev 当前层次
 	 */
-	private void parseBraceStatement(SymSet fsys, int lev) {
+	private void parseBraceStatement(SymSet fsys, int lev, boolean haveBrace) {
 		SymSet nxtlev;
 		
-		nextSym();
+		if (haveBrace) {
+			nextSym();
+		}
 		nxtlev = (SymSet) fsys.clone();
 		nxtlev.set(Symbol.semicolon);
 		nxtlev.set(Symbol.rbrace);
@@ -359,8 +350,9 @@ public class Parser {
 			parseStatement(nxtlev, lev);
 		}
 
-		System.out.println("BraceStmt: sym = " + sym);
-		checkNextSymbol(Symbol.rbrace, 122);
+		if (haveBrace) {
+			checkNextSymbol(Symbol.rbrace, 122);
+		}
 	}
 
 	/**
@@ -387,7 +379,11 @@ public class Parser {
 
 		cx1 = interp.cx;						// 保存当前指令地址
 		interp.gen(Fct.JPC, 0, 0);				// 生成条件跳转指令，跳转地址未知，暂时写0
+
 		parseStatement(fsys, lev);				// 处理then后的语句
+
+		checkNextSymbol(Symbol.endsym, 134);
+
 		interp.code[cx1].a = interp.cx;			// 经statement处理后，cx为then后语句执行
 												// 完的位置，它正是前面未定的跳转地址
 	}

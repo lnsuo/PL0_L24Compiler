@@ -88,6 +88,7 @@ public class Scanner {
 		ssym['{'] = Symbol.lbrace;
 		ssym['}'] = Symbol.rbrace;
 		ssym['!'] = Symbol.not;
+		ssym[':'] = Symbol.startsym;
 		
 		// 设置保留字名字,按照字母顺序，便于折半查找
 		word = new String[] {"begin", "call", "const", "do", "end", "if", "main",
@@ -208,7 +209,6 @@ public class Scanner {
 			getch();
 			if (ch == '=') {
 				sym = Symbol.neq;
-				System.out.println("In neq");
 				getch();
 			} else {
 				sym = Symbol.nul;
