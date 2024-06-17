@@ -41,7 +41,7 @@ var f, g;
 begin
     f = x;
     g = y;
-    while f#g do
+    while f!=g do
     begin
         if f < g then g = g - f;
         if g < f then f = f - g;
@@ -67,5 +67,45 @@ begin
     x = 7;
     y = 11;
     print(1+2, x+3, -y, -(x+7)*3);
+
+    x = 1;
+    y = 1;
+
+    if x==y then
+    begin
+        print(111);
+    end;
+
+    if x<y then
+    begin
+        print(222);
+    end;
+
+    if x<=y then
+    begin
+        print(333);
+    end;
+
+    if x>y then
+    begin
+        print(444);
+    end;
+
+    if x>=y then
+    begin
+        print(555);
+    end;
+
+    if x!=y then
+    begin
+        print(666);
+    end;
+
+    x = 1;
+    y = 2;
+    if x!=y then
+    begin
+        print(777);
+    end;
 end
 }

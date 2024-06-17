@@ -264,7 +264,7 @@ public class Parser {
 	void parseConstDeclaration(int lev) {
 		if (sym == Symbol.ident) {
 			nextSym();
-			if (sym == Symbol.eql) {
+			if (sym == Symbol.becomes) {
 				nextSym();
 				if (sym == Symbol.number) {
 					table.enter(Objekt.constant, lev, dx);
@@ -391,6 +391,8 @@ public class Parser {
 	 * @param lev 当前层次
 	 */
 	private void parseIfStatement(SymSet fsys, int lev) {
+		System.out.println("In If");
+
 		int cx1;
 		SymSet nxtlev;
 		
@@ -527,10 +529,10 @@ public class Parser {
 			Table.Item item = table.get(i);
 			if (item.kind == Objekt.variable) {
 				nextSym();
-				if (sym == Symbol.eql)
+				if (sym == Symbol.becomes)
 					nextSym();
 				else
-					Err.report(13);					// 没有检测到等号
+					Err.report(13);					// 没有检测到赋值的等号
 				nxtlev = (SymSet) fsys.clone();
 				parseExpression(nxtlev, lev);
 				// parseExpression将产生一系列指令，但最终结果将会保存在栈顶，执行sto命令完成赋值

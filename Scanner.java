@@ -84,10 +84,10 @@ public class Scanner {
 		ssym['='] = Symbol.eql;
 		ssym[','] = Symbol.comma;
 		ssym['.'] = Symbol.period;
-		ssym['#'] = Symbol.neq;
 		ssym[';'] = Symbol.semicolon;
 		ssym['{'] = Symbol.lbrace;
 		ssym['}'] = Symbol.rbrace;
+		ssym['!'] = Symbol.not;
 		
 		// 设置保留字名字,按照字母顺序，便于折半查找
 		word = new String[] {"begin", "call", "const", "do", "end", "if", "main",
@@ -204,9 +204,23 @@ public class Scanner {
 	void matchOperator() {
 		// 请注意这里的写法跟Wirth的有点不同
 		switch (ch) {
-		case ':':		// 赋值符号
-			sym = Symbol.eql;
+		case '!':
 			getch();
+			if (ch == '=') {
+				sym = Symbol.neq;
+				System.out.println("In neq");
+				getch();
+			} else {
+				sym = Symbol.nul;
+			}
+			break;
+		case '=':		// 赋值符号
+			getch();
+			sym = Symbol.becomes;
+			if (ch == '=') {
+				sym = Symbol.eql;
+				getch();
+			}
 			break;
 		case '<':		// 小于或者小于等于
 			getch();
