@@ -1,3 +1,5 @@
+import javax.swing.text.StyleContext.SmallAttributeSet;
+
 /**
  *　　语法分析器。这是PL/0分析器中最重要的部分，在语法分析的过程中穿插着语法错误检查和目标代码生成。
  */
@@ -224,29 +226,6 @@ public class Parser {
 	}
 
 	/**
-	 * 分析<常量说明部分>
-	 * @param lev 当前所在的层次
-	 */
-	void parseConstDeclaration(int lev) {
-		if (sym == Symbol.ident) {
-			nextSym();
-			if (sym == Symbol.becomes) {
-				nextSym();
-				if (sym == Symbol.number) {
-					table.enter(Objekt.constant, lev, dx);
-					nextSym();
-				} else {
-					Err.report(2);			// 常量说明 = 后应是数字
-				}
-			} else {
-				Err.report(3);				// 常量说明标识后应是 =
-			}
-		} else {
-			Err.report(4);					// const 后应是标识符
-		}
-	}
-
-	/**
 	 * 分析<变量说明部分>
 	 * @param lev 当前层次
 	 */
@@ -361,7 +340,7 @@ public class Parser {
 	 * @param lev 当前层次
 	 */
 	private void parseIfStatement(SymSet fsys, int lev) {
-		int cx1;
+		int cx1, cx2;
 		SymSet nxtlev;
 		
 		nextSym();
@@ -382,10 +361,22 @@ public class Parser {
 
 		parseStatement(fsys, lev);				// 处理then后的语句
 
-		checkNextSymbol(Symbol.endsym, 134);
+		if (sym == Symbol.elsesym) {
+			cx2 = interp.cx;
+			interp.gen(Fct.JMP, 0, 0);		// 跳过else语句
 
-		interp.code[cx1].a = interp.cx;			// 经statement处理后，cx为then后语句执行
-												// 完的位置，它正是前面未定的跳转地址
+			interp.code[cx1].a = interp.cx;			// 经statement处理后，cx为then后语句执行
+													// 完的位置，它正是前面未定的跳转地址
+			nextSym();
+			parseStatement(fsys, lev);
+
+			interp.code[cx2].a = interp.cx;
+		} else {
+			interp.code[cx1].a = interp.cx;			// 经statement处理后，cx为then后语句执行
+													// 完的位置，它正是前面未定的跳转地址
+		}
+
+		checkNextSymbol(Symbol.endsym, 134);
 	}
 
 	/**
@@ -692,6 +683,8 @@ public class Parser {
 					break;
 				case leq:
 					interp.gen(Fct.OPR, 0, 13);
+					break;
+				default:
 					break;
 				}
 			} else {

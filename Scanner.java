@@ -91,7 +91,7 @@ public class Scanner {
 		ssym[':'] = Symbol.startsym;
 		
 		// 设置保留字名字,按照字母顺序，便于折半查找
-		word = new String[] {"begin", "call", "const", "do", "end", "if", "main",
+		word = new String[] {"begin", "call", "const", "do", "else", "end", "if", "main",
 			"odd", "print", "procedure", "scan", "then", "var", "while"};
 		
 		// 设置保留字符号
@@ -100,16 +100,17 @@ public class Scanner {
 		wsym[1] = Symbol.callsym;
 		wsym[2] = Symbol.constsym;
 		wsym[3] = Symbol.dosym;
-		wsym[4] = Symbol.endsym;
-		wsym[5] = Symbol.ifsym;
-		wsym[6] = Symbol.mainsym;
-		wsym[7] = Symbol.oddsym;
-		wsym[8] = Symbol.printsym;
-		wsym[9] = Symbol.procsym;
-		wsym[10] = Symbol.scansym;
-		wsym[11] = Symbol.thensym;
-		wsym[12] = Symbol.varsym;
-		wsym[13] = Symbol.whilesym;
+		wsym[4] = Symbol.elsesym;
+		wsym[5] = Symbol.endsym;
+		wsym[6] = Symbol.ifsym;
+		wsym[7] = Symbol.mainsym;
+		wsym[8] = Symbol.oddsym;
+		wsym[9] = Symbol.printsym;
+		wsym[10] = Symbol.procsym;
+		wsym[11] = Symbol.scansym;
+		wsym[12] = Symbol.thensym;
+		wsym[13] = Symbol.varsym;
+		wsym[14] = Symbol.whilesym;
 	}
 	
 	/**
