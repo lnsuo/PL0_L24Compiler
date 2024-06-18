@@ -2,7 +2,7 @@
  * 符号类型，为避免和Java的关键字Object冲突，我们改成Objekt
  */
 enum Objekt {
-	constant, variable, procedure
+	constant, variable, procedure, string
 }
 
 /**
@@ -89,6 +89,10 @@ public class Table {
 			break;
 		case procedure:					// 过程名字
 			item.level = lev;
+			break;
+		case string:
+			item.level = lev;
+			item.adr = dx;
 			break;
 		}
 	}

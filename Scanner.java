@@ -92,7 +92,7 @@ public class Scanner {
 		
 		// 设置保留字名字,按照字母顺序，便于折半查找
 		word = new String[] {"begin", "call", "const", "do", "else", "end", "if", "main",
-			"odd", "print", "procedure", "scan", "then", "var", "while"};
+			"odd", "print", "procedure", "scan", "str", "then", "var", "while"};
 		
 		// 设置保留字符号
 		wsym = new Symbol[PL0.norw];
@@ -108,9 +108,10 @@ public class Scanner {
 		wsym[9] = Symbol.printsym;
 		wsym[10] = Symbol.procsym;
 		wsym[11] = Symbol.scansym;
-		wsym[12] = Symbol.thensym;
-		wsym[13] = Symbol.varsym;
-		wsym[14] = Symbol.whilesym;
+		wsym[12] = Symbol.strsym;
+		wsym[13] = Symbol.thensym;
+		wsym[14] = Symbol.varsym;
+		wsym[15] = Symbol.whilesym;
 	}
 	
 	/**

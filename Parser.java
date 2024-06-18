@@ -163,6 +163,19 @@ public class Parser {
 
 				checkNextSymbol(Symbol.semicolon, 5);
 			}
+
+			if (sym == Symbol.strsym) {
+				nextSym();
+				parseStrDeclaration(lev);
+				while (sym == Symbol.comma) {
+					nextSym();
+					parseStrDeclaration(lev);
+				}
+
+				checkNextSymbol(Symbol.semicolon, 201);
+			}
+
+
 			
 			// <过程说明部分>
 			while (sym == Symbol.procsym) {
@@ -193,6 +206,11 @@ public class Parser {
 			
 			nxtlev = (SymSet) statbegsys.clone(); 
 			nxtlev.set(Symbol.ident);
+
+			if (sym == Symbol.rbrace) {
+				break;
+			}
+
 			test(nxtlev, declbegsys, 7);
 		} while (declbegsys.get(sym));		// 直到没有声明符号
 		
@@ -237,6 +255,22 @@ public class Parser {
 			Err.report(4);					// var 后应是标识
 		}
 	}
+
+	/**
+	 * 分析<字符串说明部分>
+	 * @param lev 当前层次
+	 */
+	void parseStrDeclaration(int lev) {
+		if (sym == Symbol.ident) {
+			// 填写名字表并改变堆栈帧计数器
+			table.enter(Objekt.string, lev, dx);
+			dx ++;
+			nextSym();
+		} else {
+			Err.report(200);					// var 后应是标识
+		}
+	}
+
 
 	/**
 	 * 分析<语句>
