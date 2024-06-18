@@ -751,7 +751,7 @@ public class Parser {
 						interp.gen(Fct.LOD, lev - item.level, item.adr);
 						break;
 					case string:							// 名字为字符串
-						System.out.println("Item: " + item);
+						// System.out.println("Item: " + item);
 						interp.gen(Fct.LODS, lev - item.level, item.adr);
 						break;
 					case procedure:							// 名字为过程
@@ -771,7 +771,8 @@ public class Parser {
 					Err.report(404);
 					num = 0;
 				}
-				interp.gen(Fct.LIT, 0, num);
+				interp.gen(Fct.LITS, 0, new Data(Integer.toString(num)));
+				System.out.println("parseStrFactor: num = " + num);
 				nextSym();
 			} else if (sym == Symbol.strsym) {
 				String str = lex.str;

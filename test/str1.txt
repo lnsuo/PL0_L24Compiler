@@ -2,14 +2,25 @@ main {
     var aa, bb;
     str a, b, c, d, e, f;
 
-    a = "hello";
-    b = "test111";
-    c = a;
-    d = a + b;
-    e = a + "222";
-    f = "";
-
+    a = "111";
     print(a);
-    print(b, c);
-    print(d, e);
+    b = "222";
+    print(b);
+    c = "333";
+    print(c);
+
+    d = a + b + c + "444";
+    print(d);
+
+    print(1, 1, 1, 1, 1, 1);
+    
+    d = d + 8;
+    print(d);
+
+    e = a * 2;
+    print(e);
+    e = a * 3;
+    print(e);
+    e = a * 2 * 4;
+    print(e);
 }

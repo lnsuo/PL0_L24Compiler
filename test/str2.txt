@@ -7,10 +7,14 @@ main {
     c = a;
     d = a + b;
     e = a + "222";
-    f = "";
 
     print(a);
     print(b, c);
     print(d, e);
+
+    f = a * 2;
+    print(f);
+
+    f = a * 2 * 4;
     print(f);
 }

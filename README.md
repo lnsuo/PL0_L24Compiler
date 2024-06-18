@@ -29,20 +29,8 @@
 
 ```
 
-## 完成状况
+## 待完成
 
-1. program      DONE
-2. stmt_list    DONE
-3. stmt         DONE
-4. assign_stmt  DONE
-5. if_stmt      DONE
-6. while_stmt   DONE
-7. scan_stmt    DONE
-8. print_stmt   DONE
-9. bool_expr    DONE
-10. expr        DONE
-11. term        DONE
-12. factor      DONE
-
-13. 声明        DONE
-14. string      **TODO**
+1. 直接print字符串
+2. str的乘法
+3. str 和 num 的加法
