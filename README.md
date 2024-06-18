@@ -32,12 +32,12 @@
 ## 完成状况
 
 1. program      DONE
-2. stmt_list    **TODO**
-3. stmt         **TODO**
+2. stmt_list    DONE
+3. stmt         DONE
 4. assign_stmt  DONE
-5. if_stmt      **TODO** else还未实现
-6. while_stmt   DONE 
-7. scan_stmt    **TODO**
+5. if_stmt      DONE
+6. while_stmt   DONE
+7. scan_stmt    DONE
 8. print_stmt   DONE
 9. bool_expr    DONE
 10. expr        DONE

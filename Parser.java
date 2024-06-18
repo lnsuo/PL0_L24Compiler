@@ -1,5 +1,3 @@
-import javax.swing.text.StyleContext.SmallAttributeSet;
-
 /**
  *　　语法分析器。这是PL/0分析器中最重要的部分，在语法分析的过程中穿插着语法错误检查和目标代码生成。
  */

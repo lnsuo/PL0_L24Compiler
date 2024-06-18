@@ -1,0 +1,16 @@
+main {
+    var a, b;
+
+    a = 1;
+    b = 1;
+    print(a, b);
+
+    scan(a);
+    print(a, b);
+
+    scan(b);
+    print(a, b);
+
+    scan(a, b);
+    print(a, b);
+}
