@@ -668,7 +668,7 @@ public class Parser {
 				isFirst = false;
 				interp.gen(Fct.OPR, 0, 19);
 			} else {		// str * (num * num)
-				interp.gen(Fct.OPR, 0, 4);
+				interp.gen(Fct.OPR, 0, 19);
 			}
 		}
 	}
@@ -772,11 +772,11 @@ public class Parser {
 					num = 0;
 				}
 				interp.gen(Fct.LITS, 0, new Data(Integer.toString(num)));
-				System.out.println("parseStrFactor: num = " + num);
+				// System.out.println("parseStrFactor: num = " + num);
 				nextSym();
 			} else if (sym == Symbol.strsym) {
 				String str = lex.str;
-				System.out.println("parseStrFactor: str = " + str);
+				// System.out.println("parseStrFactor: str = " + str);
 				interp.gen(Fct.LITS, 0, new Data(str));
 				nextSym();
 			} else if (sym == Symbol.lparen) {	// 因子为表达式

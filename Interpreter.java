@@ -205,6 +205,8 @@ public class Interpreter {
 				case 19:	// str * num
 					t--;
 					String tmp = s[t-1].vs;
+					s[t-1].vs = "";
+					// System.out.println("19: vn = " + s[t].vn);
 					for (int _i = 0; _i < s[t].vn; _i++) {
 						s[t-1].change(s[t-1].vs + tmp);
 					}

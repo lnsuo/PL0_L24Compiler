@@ -1,26 +1,29 @@
 main {
-    var aa, bb;
+    var aa;
     str a, b, c, d, e, f;
 
-    a = "111";
+    a = "1";
     print(a);
     b = "222";
     print(b);
     c = "333";
     print(c);
 
-    d = a + b + c + "444";
+    d = a + b + c + "444" + 77 + "a";
     print(d);
 
-    print(1, 1, 1, 1, 1, 1);
-    
-    d = d + 8;
+    d = 9 + d + 8;
     print(d);
+
+    print(0);
 
     e = a * 2;
     print(e);
     e = a * 3;
     print(e);
     e = a * 2 * 4;
+    print(e);
+    aa = 5;
+    e = a * aa;
     print(e);
 }
