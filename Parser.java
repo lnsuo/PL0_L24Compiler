@@ -216,7 +216,7 @@ public class Parser {
 		
 		// 开始生成当前过程代码
 		Table.Item item = table.get(tx0);
-		interp.code[item.adr].a = interp.cx;
+		interp.code[item.adr].a.vn = interp.cx;
 		item.adr = interp.cx;					// 当前过程代码地址
 		item.size = dx;							// 声明部分中每增加一条声明都会给dx增加1，
 												// 声明部分已经结束，dx就是当前过程的堆栈帧大小
@@ -248,8 +248,8 @@ public class Parser {
 	void parseVarDeclaration(int lev) {
 		if (sym == Symbol.ident) {
 			// 填写名字表并改变堆栈帧计数器
-			table.enter(Objekt.variable, lev, dx);
-			dx ++;
+			if (table.enter(Objekt.variable, lev, dx))
+				dx ++;
 			nextSym();
 		} else {
 			Err.report(4);					// var 后应是标识
@@ -336,7 +336,7 @@ public class Parser {
 		parseStatement(fsys, lev);				// 分析<语句>
 
 		interp.gen(Fct.JMP, 0, cx1);			// 回头重新判断条件
-		interp.code[cx2].a = interp.cx;			// 反填跳出循环的地址，与<条件语句>类似
+		interp.code[cx2].a.vn = interp.cx;			// 反填跳出循环的地址，与<条件语句>类似
 	}
 
 	/**
@@ -397,14 +397,14 @@ public class Parser {
 			cx2 = interp.cx;
 			interp.gen(Fct.JMP, 0, 0);		// 跳过else语句
 
-			interp.code[cx1].a = interp.cx;			// 经statement处理后，cx为then后语句执行
+			interp.code[cx1].a.vn = interp.cx;			// 经statement处理后，cx为then后语句执行
 													// 完的位置，它正是前面未定的跳转地址
 			nextSym();
 			parseStatement(fsys, lev);
 
-			interp.code[cx2].a = interp.cx;
+			interp.code[cx2].a.vn = interp.cx;
 		} else {
-			interp.code[cx1].a = interp.cx;			// 经statement处理后，cx为then后语句执行
+			interp.code[cx1].a.vn = interp.cx;			// 经statement处理后，cx为then后语句执行
 													// 完的位置，它正是前面未定的跳转地址
 		}
 
@@ -528,14 +528,21 @@ public class Parser {
 			Table.Item item = table.get(i);
 			if (item.kind == Objekt.variable) {
 				nextSym();
-				if (sym == Symbol.becomes)
-					nextSym();
-				else
-					Err.report(13);					// 没有检测到赋值的等号
+
+				checkNextSymbol(Symbol.becomes, 301);
+
 				nxtlev = (SymSet) fsys.clone();
 				parseExpression(nxtlev, lev);
 				// parseExpression将产生一系列指令，但最终结果将会保存在栈顶，执行sto命令完成赋值
 				interp.gen(Fct.STO, lev - item.level, item.adr);
+			} else if (item.kind == Objekt.string) {
+				nextSym();
+
+				checkNextSymbol(Symbol.becomes, 302);
+				
+				nxtlev = (SymSet) fsys.clone();
+				parseStrExpression(nxtlev, lev);
+				interp.gen(Fct.STS, lev - item.level, item.adr);
 			} else {
 				Err.report(12);						// 赋值语句格式错误
 			}
@@ -586,6 +593,15 @@ public class Parser {
 	}
 
 	/**
+	 * 分析<字符串表达式>
+	 * @param fsys 后跟符号集
+	 * @param lev 当前层次
+	 */
+	private void parseStrExpression(SymSet fsys, int lev) {
+
+	}
+
+	/**
 	 * 分析<项>
 	 * @param fsys 后跟符号集
 	 * @param lev 当前层次
@@ -629,14 +645,17 @@ public class Parser {
 				if (i > 0) {
 					Table.Item item = table.get(i);
 					switch (item.kind) {
-					case constant:			// 名字为常量
+					case constant:							// 名字为常量
 						interp.gen(Fct.LIT, 0, item.val);
 						break;
-					case variable:			// 名字为变量
+					case variable:							// 名字为变量
 						interp.gen(Fct.LOD, lev - item.level, item.adr);
 						break;
-					case procedure:			// 名字为过程
+					case procedure:							// 名字为过程
 						Err.report(21);				// 不能为过程
+						break;
+					case string:							// 名字为字符串
+						Err.report(21);				// 不能为字符串
 						break;
 					}
 				} else {

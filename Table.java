@@ -69,7 +69,13 @@ public class Table {
 	 * @param lev 名字所在的层次
 	 * @param dx  当前应分配的变量的相对地址，注意调用enter()后dx要加一
 	 */
-	public void enter(Objekt k, int lev, int dx) {
+	public boolean enter(Objekt k, int lev, int dx) {
+		if (inTable()) {
+			System.out.println("Objekt " + PL0.lex.id + " already defined");
+			PL0.fa2.println("Objekt " + PL0.lex.id + " already defined");
+			return false;
+		}
+
 		tx ++;
 		Item item = get(tx);
 		item.name = PL0.lex.id;			// 注意id和num都是从词法分析器获得
@@ -95,6 +101,8 @@ public class Table {
 			item.adr = dx;
 			break;
 		}
+
+		return true;
 	}
 	
 	/**
@@ -115,6 +123,9 @@ public class Table {
 				break;
 			case variable:
 				msg = "    " + i + " var   " + table[i].name + " lev=" + table[i].level + " addr=" + table[i].adr;
+				break;
+			case string:
+				msg = "    " + i + " str   " + table[i].name + " lev=" + table[i].level + " addr=" + table[i].adr;
 				break;
 			case procedure:
 				msg = "    " + i + " proc  " + table[i].name + " lev=" + table[i].level + " addr=" + table[i].adr + " size=" + table[i].size;
@@ -137,5 +148,15 @@ public class Table {
 				return i;
 		
 		return 0;
+	}
+
+	private boolean inTable() {
+		for (int i = 0; i < tx; ++i) {
+			if (get(i).name.equals(PL0.lex.id)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

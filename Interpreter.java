@@ -2,7 +2,7 @@
  * 类P-Code指令类型
  */
 enum Fct {
-	LIT, OPR, LOD, STO, CAL, INT, JMP, JPC
+	LIT, OPR, LOD, STO, CAL, INT, JMP, JPC, STS
 }
 
 /**
@@ -22,7 +22,7 @@ class Instruction {
 	/**
 	 * 指令参数
 	 */
-	public int a;
+	public Data a;
 }
 
 /**
@@ -48,6 +48,24 @@ public class Interpreter {
 	 * @param y instruction.l
 	 * @param z instruction.a
 	 */
+	public void gen(Fct x, int y, Data z) {
+		if (cx >= PL0.cxmax) {
+			throw new Error("Program too long");
+		}
+		
+		code[cx] = new Instruction();
+		code[cx].f = x;
+		code[cx].l = y;
+		code[cx].a = z.clone();
+		cx ++;
+	}
+
+	/**
+	 * 生成虚拟机代码
+	 * @param x instruction.f
+	 * @param y instruction.l
+	 * @param z instruction.a
+	 */
 	public void gen(Fct x, int y, int z) {
 		if (cx >= PL0.cxmax) {
 			throw new Error("Program too long");
@@ -56,7 +74,7 @@ public class Interpreter {
 		code[cx] = new Instruction();
 		code[cx].f = x;
 		code[cx].l = y;
-		code[cx].a = z;
+		code[cx].a = new Data(z);
 		cx ++;
 	}
 
@@ -80,76 +98,88 @@ public class Interpreter {
 	public void interpret() {
 		int p, b, t;						// 指令指针，指令基址，栈顶指针
 		Instruction i;							// 存放当前指令
-		int[] s = new int[stacksize];		// 栈
+		Data[] s = new Data[stacksize];		// 栈
+		for (int _i = 0; _i < stacksize; _i++) {
+			s[_i] = new Data();
+		}
 		
 		System.out.println("start pl0");
 		t = b = p = 0;
-		s[0] = s[1] = s[2] = 0;
+		s[0] = new Data(0);
+		s[1] = new Data(0);
+		s[2] = new Data(0);
 		do {
 			i = code[p];					// 读当前指令
 			p ++;
 			switch (i.f) {
 			case LIT:				// 将a的值取到栈顶
-				s[t] = i.a;
+				// System.out.println("LIT: i.a.vn = " + i.a.vn);
+				// System.out.println("t = " + t);
+				s[t].vn = i.a.vn;
 				t++;
 				break;
 			case OPR:				// 数学、逻辑运算
-				switch (i.a)
+				switch (i.a.vn)
 				{
 				case 0:
 					t = b;
-					p = s[t+2];
-					b = s[t+1];
+					p = s[t+2].vn;
+					b = s[t+1].vn;
 					break;
 				case 1:
-					s[t-1] = -s[t-1];
+					s[t-1].vn = -s[t-1].vn;
 					break;
 				case 2:
 					t--;
-					s[t-1] = s[t-1]+s[t];
+					s[t-1].vn = s[t-1].vn + s[t].vn;
 					break;
 				case 3:
 					t--;
-					s[t-1] = s[t-1]-s[t];
+					s[t-1].vn = s[t-1].vn - s[t].vn;
 					break;
 				case 4:
 					t--;
-					s[t-1] = s[t-1]*s[t];
+					s[t-1].vn = s[t-1].vn * s[t].vn;
 					break;
 				case 5:
 					t--;
-					s[t-1] = s[t-1]/s[t];
+					s[t-1].vn = s[t-1].vn / s[t].vn;
 					break;
 				case 6:
-					s[t-1] = s[t-1]%2;
+					s[t-1].vn = s[t-1].vn % 2;
 					break;
 				case 8:
 					t--;
-					s[t-1] = (s[t-1] == s[t] ? 1 : 0);
+					s[t-1].vn = (s[t-1].vn == s[t].vn ? 1 : 0);
 					break;
 				case 9:
 					t--;
-					s[t-1] = (s[t-1] != s[t] ? 1 : 0);
+					s[t-1].vn = (s[t-1].vn != s[t].vn ? 1 : 0);
 					break;
 				case 10:
 					t--;
-					s[t-1] = (s[t-1] < s[t] ? 1 : 0);
+					s[t-1].vn = (s[t-1].vn < s[t].vn ? 1 : 0);
 					break;
 				case 11:
 					t--;
-					s[t-1] = (s[t-1] >= s[t] ? 1 : 0);
+					s[t-1].vn = (s[t-1].vn >= s[t].vn ? 1 : 0);
 					break;
 				case 12:
 					t--;
-					s[t-1] = (s[t-1] > s[t] ? 1 : 0);
+					s[t-1].vn = (s[t-1].vn > s[t].vn ? 1 : 0);
 					break;
 				case 13:
 					t--;
-					s[t-1] = (s[t-1] <= s[t] ? 1 : 0);
+					s[t-1].vn = (s[t-1].vn <= s[t].vn ? 1 : 0);
 					break;
 				case 14:
-					System.out.print(s[t-1]);
-					PL0.fa2.print(s[t-1]);
+					if (s[t-1].isNum()) {
+						System.out.print(s[t-1].vn);
+						PL0.fa2.print(s[t-1].vn);
+					} else {
+						System.out.print(s[t-1].vs);
+						PL0.fa2.print(s[t-1].vs);
+					}
 					t--;
 					break;
 				case 15:
@@ -159,9 +189,9 @@ public class Interpreter {
 				case 16:
 					System.out.print("?");
 					PL0.fa2.print("?");
-					s[t] = 0;
+					s[t].vn = 0;
 					try {
-						s[t] = Integer.parseInt(PL0.stdin.readLine());
+						s[t].vn = Integer.parseInt(PL0.stdin.readLine());
 					} catch (Exception e) {}
 					PL0.fa2.println(s[t]);
 					t++;
@@ -173,30 +203,34 @@ public class Interpreter {
 				}
 				break;
 			case LOD:				// 取相对当前过程的数据基地址为a的内存的值到栈顶
-				s[t] = s[base(i.l,s,b)+i.a];
+				s[t].vn = s[base(i.l,s,b)+i.a.vn].vn;
 				t++;
 				break;
 			case STO:				// 栈顶的值存到相对当前过程的数据基地址为a的内存
 				t--;
-				s[base(i.l, s, b) + i.a] = s[t];
+				s[base(i.l, s, b) + i.a.vn].vn = s[t].vn;
 				break;
 			case CAL:				// 调用子过程
-				s[t] = base(i.l, s, b); 	// 将静态作用域基地址入栈
-				s[t+1] = b;					// 将动态作用域基地址入栈
-				s[t+2] = p;					// 将当前指令指针入栈
+				s[t].vn = base(i.l, s, b); 	// 将静态作用域基地址入栈
+				s[t+1].vn = b;					// 将动态作用域基地址入栈
+				s[t+2].vn = p;					// 将当前指令指针入栈
 				b = t;  					// 改变基地址指针值为新过程的基地址
-				p = i.a;   					// 跳转
+				p = i.a.vn;   					// 跳转
 				break;
 			case INT:			// 分配内存
-				t += i.a;
+				t += i.a.vn;
 				break;
 			case JMP:				// 直接跳转
-				p = i.a;
+				p = i.a.vn;
 				break;
 			case JPC:				// 条件跳转（当栈顶为0的时候跳转）
 				t--;
-				if (s[t] == 0)
-					p = i.a;
+				if (s[t].vn == 0)
+					p = i.a.vn;
+				break;
+			case STS:				// 将栈顶的值存到相对当前过程的数据基地址为a的内存
+				t--;
+				s[base(i.l, s, b) + i.a.vn].vn = s[t].vn;
 				break;
 			}
 		} while (p != 0);
@@ -209,10 +243,10 @@ public class Interpreter {
 	 * @param b 当前层堆栈帧基地址
 	 * @return 目标层次的堆栈帧基地址
 	 */
-	private int base(int l, int[] s, int b) {
+	private int base(int l, Data[] s, int b) {
 		int b1 = b;
 		while (l > 0) {
-			b1 = s[b1];
+			b1 = s[b1].vn;
 			l --;
 		}
 		return b1;

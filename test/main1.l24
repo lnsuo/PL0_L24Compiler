@@ -1,10 +1,8 @@
 main {
     var a;
 
-    begin
-        a = 1;
-        print(a);
-        print(2);
-        print(3);
-    end
+    a = 1;
+    print(a);
+    print(2);
+    print(3);
 }
