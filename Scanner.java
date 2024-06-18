@@ -64,6 +64,13 @@ public class Scanner {
 	 * @see Table#enter
 	 */
 	public int num;
+
+	/**
+	 * 字符串（如果当前符号是字符串的话）
+	 * @see Parser
+	 * @see Table#enter
+	 */
+	public String str;
 	
 	/**
 	 * 初始化词法分析器
@@ -151,6 +158,8 @@ public class Scanner {
 		} else if (ch >= '0' && ch <= '9') {
 			// 数字
 			matchNumber();
+		} else if (ch == '"') {
+			matchString();
 		} else {
 			// 操作符
 			matchOperator();
@@ -249,4 +258,18 @@ public class Scanner {
 			break;
 		}
 	}	
+
+	/**
+	 * 分析字符串
+	 */
+	void matchString() {
+		sym = Symbol.strsym;
+		str = "";
+		getch();
+		while (ch != '"') {
+			str += ch;
+			getch();
+		}
+		getch();
+	}
 }

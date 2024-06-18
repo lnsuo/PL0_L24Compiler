@@ -37,6 +37,10 @@ public class Table {
 		 * 需要分配的数据区空间, 仅procedure使用
 		 */
 		int size; 
+
+		public String toString() {
+			return "name: " + name + ", kind: " + kind + ", level: " + level + ", adr: " + adr;
+		}
 	}
 	
 	/**
@@ -71,8 +75,8 @@ public class Table {
 	 */
 	public boolean enter(Objekt k, int lev, int dx) {
 		if (inTable()) {
-			System.out.println("Objekt " + PL0.lex.id + " already defined");
-			PL0.fa2.println("Objekt " + PL0.lex.id + " already defined");
+			System.out.println("Err: Objekt " + PL0.lex.id + " already defined");
+			PL0.fa1.println("Err: Objekt " + PL0.lex.id + " already defined");
 			return false;
 		}
 
@@ -93,12 +97,12 @@ public class Table {
 			item.level = lev;
 			item.adr = dx;
 			break;
-		case procedure:					// 过程名字
-			item.level = lev;
-			break;
 		case string:
 			item.level = lev;
 			item.adr = dx;
+			break;
+		case procedure:					// 过程名字
+			item.level = lev;
 			break;
 		}
 

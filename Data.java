@@ -22,6 +22,16 @@ public class Data {
         return isNum;
     }
 
+    public void change(int n) {
+        vn = n;
+        isNum = true;
+    }
+
+    public void change(String s) {
+        vs = s;
+        isNum = false;
+    }
+
     public Data clone() {
         if (isNum) {
             return new Data(vn);
