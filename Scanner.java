@@ -96,6 +96,7 @@ public class Scanner {
 		ssym['}'] = Symbol.rbrace;
 		ssym['!'] = Symbol.not;
 		ssym[':'] = Symbol.startsym;
+		ssym['"'] = Symbol.quote;
 		
 		// 设置保留字名字,按照字母顺序，便于折半查找
 		word = new String[] {"begin", "call", "const", "do", "else", "end", "if", "main",

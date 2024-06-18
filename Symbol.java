@@ -7,5 +7,5 @@ public enum Symbol {
 	comma, semicolon, period, becomes, 
 	beginsym, endsym, ifsym, thensym, whilesym, printsym,
 	scansym, dosym, callsym, constsym, varsym, procsym,
-	mainsym, lbrace, rbrace, strsym, not, startsym, elsesym
+	mainsym, lbrace, rbrace, strsym, not, startsym, elsesym, quote
 }

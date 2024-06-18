@@ -185,8 +185,6 @@ public class Interpreter {
 					PL0.fa2.println();
 					break;
 				case 16:	// scan num
-					System.out.print("?");
-					PL0.fa2.print("?");
 					s[t].change(0);
 					try {
 						s[t].change(Integer.parseInt(PL0.stdin.readLine()));
@@ -211,8 +209,6 @@ public class Interpreter {
 					}
 					break;
 				case 20:	// scan str
-					System.out.print("?");
-					PL0.fa2.print("?");
 					s[t].change(0);
 					try {
 						s[t].change(PL0.stdin.readLine());

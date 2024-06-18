@@ -450,22 +450,27 @@ public class Parser {
 				if (cnt > 0) {
 					interp.gen(Fct.OPR, 0, 17);
 				}
+				cnt++;
 
 				nextSym();
 				nxtlev = (SymSet) fsys.clone();
 				nxtlev.set(Symbol.rparen);
 				nxtlev.set(Symbol.comma);
 
-				Table.Item item = table.get(table.position(lex.id));
-				if (item.kind == Objekt.string) {
-					parseStrExpression(nxtlev, lev);
+				if (sym == Symbol.strsym) {
+					interp.gen(Fct.LITS, 0, new Data(lex.str));
+					nextSym();
 				} else {
-					parseExpression(nxtlev, lev);
-				}
+					Table.Item item = table.get(table.position(lex.id));
+					if (item.kind == Objekt.string) {
+						parseStrExpression(nxtlev, lev);
+					} else {
+						parseExpression(nxtlev, lev);
+					}
 
+				}
 				interp.gen(Fct.OPR, 0, 14);
 
-				cnt++;
 			} while (sym == Symbol.comma);
 			
 			if (sym == Symbol.rparen)
