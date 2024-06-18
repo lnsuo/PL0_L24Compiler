@@ -191,7 +191,7 @@ public class Interpreter {
 					try {
 						s[t].change(Integer.parseInt(PL0.stdin.readLine()));
 					} catch (Exception e) {}
-					PL0.fa2.println(s[t]);
+					PL0.fa2.println(s[t].vs);
 					t++;
 					break;
 				case 17:	// print " "
@@ -206,10 +206,20 @@ public class Interpreter {
 					t--;
 					String tmp = s[t-1].vs;
 					s[t-1].vs = "";
-					// System.out.println("19: vn = " + s[t].vn);
 					for (int _i = 0; _i < s[t].vn; _i++) {
 						s[t-1].change(s[t-1].vs + tmp);
 					}
+					break;
+				case 20:	// scan str
+					System.out.print("?");
+					PL0.fa2.print("?");
+					s[t].change(0);
+					try {
+						s[t].change(PL0.stdin.readLine());
+					} catch (Exception e) {}
+					PL0.fa2.println(s[t].vs);
+					t++;
+					break;
 				}
 				break;
 			case LOD:				// 取相对当前过程的数据基地址为a的内存的值到栈顶

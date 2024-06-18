@@ -5,7 +5,7 @@
 1. `javac -encoding UTF-8 *.java`
 2. `java PL0`
 
-## 已完成的语法
+## 部分语法（字符串语法已实现但还未添加）
 
 ```txt
 <program>           =   "main" "{" <vardeclare> <procedure_list> <stmt_list> "}"

@@ -1,0 +1,9 @@
+main {
+    str a, b, c;
+
+    print(0, a, 0, b, 0, c);
+    scan(a);
+    print(0, a, 0, b, 0, c);
+    scan(b, c);
+    print(0, a, 0, b, 0, c);
+}

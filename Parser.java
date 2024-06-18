@@ -497,11 +497,14 @@ public class Parser {
 					Err.report(35);			// read()中应是声明过的变量名
 				} else {
 					Table.Item item = table.get(i);
-					if (item.kind != Objekt.variable) {
-						Err.report(32);		// read()中的标识符不是变量
-					} else {
+					if (item.kind == Objekt.variable) {
 						interp.gen(Fct.OPR, 0, 16);
 						interp.gen(Fct.STO, lev-item.level, item.adr);
+					} else if (item.kind == Objekt.string) {
+						interp.gen(Fct.OPR, 0, 20);
+						interp.gen(Fct.STOS, lev-item.level, item.adr);
+					} else {
+						Err.report(32);		// read()中的标识符不是变量
 					}
 				}
 				
