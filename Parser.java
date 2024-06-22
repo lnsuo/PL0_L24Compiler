@@ -373,13 +373,14 @@ public class Parser {
 	private void parseIfStatement(SymSet fsys, int lev) {
 		int cx1, cx2;
 		SymSet nxtlev;
-		
+
 		nextSym();
+
 		nxtlev = (SymSet) fsys.clone();
 		nxtlev.set(Symbol.thensym);				// 后跟符号为then或do ???
 		nxtlev.set(Symbol.dosym);
 
-		// checkNextSymbol(Symbol.lparen, 171);
+		checkNextSymbol(Symbol.lparen, 171);
 
 		parseBoolExpr(nxtlev, lev);			// 分析<条件>
 

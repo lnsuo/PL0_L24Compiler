@@ -24,8 +24,6 @@ main {
         f = 0;
     }end;
 
-    print(a, b, c);
-
     if (f == 1) then {
         print("It is a Leap Year");
     } else {
