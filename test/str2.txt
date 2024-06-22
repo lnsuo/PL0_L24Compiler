@@ -1,8 +1,0 @@
-main {
-    var aa, bb;
-    str a, b, c, d, e, f;
-
-    a = "aaa";
-    print("test");
-    print(a, "test", a);
-}
