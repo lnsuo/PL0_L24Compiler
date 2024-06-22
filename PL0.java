@@ -17,7 +17,7 @@ public class PL0 {
 	/**
 	 * 最大允许的数值
 	 */
-	public static final int amax = 2047;
+	public static final int amax = (int)((1 >> 16) - 1);
 	/**
 	 * 最多的虚拟机代码数
 	 */

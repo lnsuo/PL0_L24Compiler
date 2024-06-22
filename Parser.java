@@ -97,7 +97,7 @@ public class Parser {
 		parseStmtList(0, nxtlev, false);
 		
 		if (sym != Symbol.rbrace)
-			Err.report(1000);
+			Err.report(103);
 	}
 	
 	/**
@@ -121,7 +121,7 @@ public class Parser {
 		// 序在需要检测时指定当前需要的符号集合和补救用的集合（如之前未完成部分的后跟符
 		// 号），以及检测不通过时的错误号。
 		if (!s1.get(sym)) {
-			Err.report(errcode);
+			Err.report(111);
 			// 当检测不通过时，不停获取符号，直到它属于需要的集合或补救的集合
 			while (!s1.get(sym) && !s2.get(sym))
 				nextSym();
@@ -149,7 +149,7 @@ public class Parser {
 		interp.gen(Fct.JMP, 0, 0);
 		
 		if (lev > PL0.levmax)
-			Err.report(32);
+			Err.report(121);
 		
 		// 分析<说明部分>
 		do {
@@ -162,7 +162,7 @@ public class Parser {
 					parseVarDeclaration(lev);
 				}
 
-				checkNextSymbol(Symbol.semicolon, 5);
+				checkNextSymbol(Symbol.semicolon, 122);
 			}
 
 			if (sym == Symbol.strsym) {
@@ -173,7 +173,7 @@ public class Parser {
 					parseStrDeclaration(lev);
 				}
 
-				checkNextSymbol(Symbol.semicolon, 201);
+				checkNextSymbol(Symbol.semicolon, 123);
 			}
 
 
@@ -185,10 +185,10 @@ public class Parser {
 					table.enter(Objekt.procedure, lev, dx);
 					nextSym();
 				} else { 
-					Err.report(4);				// procedure后应为标识符
+					Err.report(124);				// procedure后应为标识符
 				}
 
-				checkNextSymbol(Symbol.startsym, 5);
+				checkNextSymbol(Symbol.startsym, 125);
 				
 				nxtlev = (SymSet) fsys.clone();
 				nxtlev.set(Symbol.semicolon);
@@ -199,9 +199,9 @@ public class Parser {
 					nxtlev = (SymSet) statbegsys.clone();
 					nxtlev.set(Symbol.ident);
 					nxtlev.set(Symbol.procsym);
-					test(nxtlev, fsys, 6);
+					test(nxtlev, fsys, 126);
 				} else { 
-					Err.report(5);				// 漏掉了分号
+					Err.report(127);				// 漏掉了分号
 				}
 			}
 			
@@ -212,7 +212,7 @@ public class Parser {
 				break;
 			}
 
-			test(nxtlev, declbegsys, 7);
+			test(nxtlev, declbegsys, 128);
 		} while (declbegsys.get(sym));		// 直到没有声明符号
 		
 		// 开始生成当前过程代码
@@ -234,7 +234,7 @@ public class Parser {
 		interp.gen(Fct.OPR, 0, 0);		// 每个过程出口都要使用的释放数据段指令
 		
 		nxtlev = new SymSet(symnum);	// 分程序没有补救集合
-		test(fsys, nxtlev, 8);				// 检测后跟符号正确性
+		test(fsys, nxtlev, 129);				// 检测后跟符号正确性
 		
 		interp.listcode(cx0);
 		
@@ -253,7 +253,7 @@ public class Parser {
 				dx ++;
 			nextSym();
 		} else {
-			Err.report(4);					// var 后应是标识
+			Err.report(131);					// var 后应是标识
 		}
 	}
 
@@ -268,7 +268,7 @@ public class Parser {
 			dx ++;
 			nextSym();
 		} else {
-			Err.report(200);					// var 后应是标识
+			Err.report(141);					// var 后应是标识
 		}
 	}
 
@@ -305,7 +305,7 @@ public class Parser {
 			break;
 		default:
 			nxtlev = new SymSet(symnum);
-			test(fsys, nxtlev, 19);
+			test(fsys, nxtlev, 151);
 			break;
 		}
 	}
@@ -324,11 +324,11 @@ public class Parser {
 		nxtlev = (SymSet) fsys.clone();
 		nxtlev.set(Symbol.dosym);				// 后跟符号为do
 
-		checkNextSymbol(Symbol.lparen, 111);
+		checkNextSymbol(Symbol.lparen, 161);
 
 		parseBoolExpr(nxtlev, lev);			// 分析<条件>
 
-		checkNextSymbol(Symbol.rparen, 112);
+		checkNextSymbol(Symbol.rparen, 162);
 
 		cx2 = interp.cx;						// 保存循环体的结束的下一个位置
 		interp.gen(Fct.JPC, 0, 0);				// 生成条件跳转，但跳出循环的地址未知
@@ -356,13 +356,13 @@ public class Parser {
 		parseStatement(nxtlev, lev);
 		// 循环分析{; <语句>}，直到下一个符号不是语句开始符号或收到end
 		while (statbegsys.get(sym) || sym == Symbol.semicolon) {
-			checkNextSymbol(Symbol.semicolon, 121);
+			checkNextSymbol(Symbol.semicolon, 171);
 
 			parseStatement(nxtlev, lev);
 		}
 
 		if (haveBrace) {
-			checkNextSymbol(Symbol.rbrace, 122);
+			checkNextSymbol(Symbol.rbrace, 172);
 		}
 	}
 	/**
@@ -379,13 +379,13 @@ public class Parser {
 		nxtlev.set(Symbol.thensym);				// 后跟符号为then或do ???
 		nxtlev.set(Symbol.dosym);
 
-		checkNextSymbol(Symbol.lparen, 131);
+		checkNextSymbol(Symbol.lparen, 173);
 
 		parseBoolExpr(nxtlev, lev);			// 分析<条件>
 
-		checkNextSymbol(Symbol.rparen, 132);
+		checkNextSymbol(Symbol.rparen, 174);
 
-		checkNextSymbol(Symbol.thensym, 133);
+		checkNextSymbol(Symbol.thensym, 175);
 
 		cx1 = interp.cx;						// 保存当前指令地址
 		interp.gen(Fct.JPC, 0, 0);				// 生成条件跳转指令，跳转地址未知，暂时写0
@@ -407,7 +407,7 @@ public class Parser {
 													// 完的位置，它正是前面未定的跳转地址
 		}
 
-		checkNextSymbol(Symbol.endsym, 134);
+		checkNextSymbol(Symbol.endsym, 176);
 	}
 
 	/**
@@ -421,17 +421,17 @@ public class Parser {
 		if (sym == Symbol.ident) {
 			i = table.position(lex.id);
 			if (i == 0) {
-				Err.report(11);					// 过程未找到
+				Err.report(181);					// 过程未找到
 			} else {
 				Table.Item item = table.get(i);
 				if (item.kind == Objekt.procedure)
 					interp.gen(Fct.CAL, lev - item.level, item.adr);
 				else
-					Err.report(15);				// call后标识符应为过程
+					Err.report(182);				// call后标识符应为过程
 			}
 			nextSym();
 		} else {
-			Err.report(14);						// call后应为标识符
+			Err.report(183);						// call后应为标识符
 		}
 	}
 
@@ -476,7 +476,7 @@ public class Parser {
 			if (sym == Symbol.rparen)
 				nextSym();
 			else
-				Err.report(33);				// print()中应为完整表达式
+				Err.report(191);				// print()中应为完整表达式
 		}
 		interp.gen(Fct.OPR, 0, 15);
 	}
@@ -499,7 +499,7 @@ public class Parser {
 					i = 0;
 				
 				if (i == 0) {
-					Err.report(35);			// read()中应是声明过的变量名
+					Err.report(201);			// read()中应是声明过的变量名
 				} else {
 					Table.Item item = table.get(i);
 					if (item.kind == Objekt.variable) {
@@ -509,20 +509,20 @@ public class Parser {
 						interp.gen(Fct.OPR, 0, 20);
 						interp.gen(Fct.STOS, lev-item.level, item.adr);
 					} else {
-						Err.report(32);		// read()中的标识符不是变量
+						Err.report(202);		// read()中的标识符不是变量
 					}
 				}
 				
 				nextSym();
 			} while (sym == Symbol.comma);
 		} else {
-			Err.report(34);					// 格式错误，应是左括号
+			Err.report(203);					// 格式错误，应是左括号
 		}
 		
 		if (sym == Symbol.rparen) {
 			nextSym();
 		} else {
-			Err.report(33);					// 格式错误，应是右括号
+			Err.report(204);					// 格式错误，应是右括号
 			while (!fsys.get(sym))
 				nextSym();
 		}
@@ -543,7 +543,7 @@ public class Parser {
 			if (item.kind == Objekt.variable) {
 				nextSym();
 
-				checkNextSymbol(Symbol.becomes, 301);
+				checkNextSymbol(Symbol.becomes, 211);
 
 				nxtlev = (SymSet) fsys.clone();
 				parseExpression(nxtlev, lev);
@@ -552,17 +552,17 @@ public class Parser {
 			} else if (item.kind == Objekt.string) {
 				nextSym();
 
-				checkNextSymbol(Symbol.becomes, 302);
+				checkNextSymbol(Symbol.becomes, 212);
 				
 				nxtlev = (SymSet) fsys.clone();
 				parseStrExpression(nxtlev, lev);
 				// parseStrExpression将产生一系列指令，但最终结果将会保存在栈顶，执行sts命令完成赋值
 				interp.gen(Fct.STOS, lev - item.level, item.adr);
 			} else {
-				Err.report(12);						// 赋值语句格式错误
+				Err.report(213);						// 赋值语句格式错误
 			}
 		} else {
-			Err.report(11);							// 变量未找到
+			Err.report(214);							// 变量未找到
 		}
 	}
 
@@ -689,7 +689,7 @@ public class Parser {
 	private void parseFactor(SymSet fsys, int lev) {
 		SymSet nxtlev;
 		
-		test(facbegsys, fsys, 160);			// 检测因子的开始符号
+		test(facbegsys, fsys, 221);			// 检测因子的开始符号
 		// the original while... is problematic: var1(var2+var3)
 		// while(inset(sym, facbegsys))
 		if (facbegsys.get(sym)) {
@@ -705,20 +705,20 @@ public class Parser {
 						interp.gen(Fct.LOD, lev - item.level, item.adr);
 						break;
 					case procedure:							// 名字为过程
-						Err.report(21);				// 不能为过程
+						Err.report(222);				// 不能为过程
 						break;
 					case string:							// 名字为字符串
 						interp.gen(Fct.LODS, lev - item.level, item.adr);
 						break;
 					}
 				} else {
-					Err.report(11);					// 标识符未声明
+					Err.report(223);					// 标识符未声明
 				}
 				nextSym();
 			} else if (sym == Symbol.number) {	// 因子为数 
 				int num = lex.num;
 				if (num > PL0.amax) {
-					Err.report(31);
+					Err.report(224);
 					num = 0;
 				}
 				interp.gen(Fct.LIT, 0, num);
@@ -731,10 +731,10 @@ public class Parser {
 				if (sym == Symbol.rparen)
 					nextSym();
 				else
-					Err.report(22);					// 缺少右括号
+					Err.report(225);					// 缺少右括号
 			} else {
 				// 做补救措施
-				test(fsys, facbegsys, 23);
+				test(fsys, facbegsys, 226);
 			}
 		}
 	}
@@ -747,7 +747,7 @@ public class Parser {
 	private void parseStrFactor(SymSet fsys, int lev) {
 		SymSet nxtlev;
 		
-		test(facbegsys, fsys, 24);			// 检测因子的开始符号
+		test(facbegsys, fsys, 231);			// 检测因子的开始符号
 
 		if (facbegsys.get(sym)) {
 			if (sym == Symbol.ident) {			// 因子为 var 或 str
@@ -763,28 +763,26 @@ public class Parser {
 						interp.gen(Fct.LODS, lev - item.level, item.adr);
 						break;
 					case procedure:							// 名字为过程
-						Err.report(401);			// 不能为过程
+						Err.report(232);			// 不能为过程
 						break;
 					default:
-						Err.report(402);
+						Err.report(233);
 						break;
 					}
 				} else {
-					Err.report(403);				// 标识符未声明
+					Err.report(234);				// 标识符未声明
 				}
 				nextSym();
 			} else if (sym == Symbol.number) {	// 因子为数 
 				int num = lex.num;
 				if (num > PL0.amax) {
-					Err.report(404);
+					Err.report(235);
 					num = 0;
 				}
 				interp.gen(Fct.LITS, 0, new Data(Integer.toString(num)));
-				// System.out.println("parseStrFactor: num = " + num);
 				nextSym();
 			} else if (sym == Symbol.strsym) {
 				String str = lex.str;
-				// System.out.println("parseStrFactor: str = " + str);
 				interp.gen(Fct.LITS, 0, new Data(str));
 				nextSym();
 			} else if (sym == Symbol.lparen) {	// 因子为表达式
@@ -794,10 +792,10 @@ public class Parser {
 				nxtlev.set(Symbol.rparen);
 				parseStrExpression(nxtlev, lev);
 
-				checkNextSymbol(Symbol.rparen, 405);
+				checkNextSymbol(Symbol.rparen, 236);
 			} else {
 				// 做补救措施
-				test(fsys, facbegsys, 23);
+				test(fsys, facbegsys, 237);
 			}
 		}
 	}
@@ -855,7 +853,7 @@ public class Parser {
 					break;
 				}
 			} else {
-				Err.report(20);
+				Err.report(241);
 			}
 		}
 	}
