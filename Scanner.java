@@ -208,7 +208,7 @@ public class Scanner {
 		} while (ch>='0' && ch<='9'); 				// 获取数字的值
 		k--;
 		if (k > PL0.nmax)
-			Err.report(30);
+			Err.report(25);
 	}
 	
 	/**
