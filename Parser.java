@@ -121,7 +121,7 @@ public class Parser {
 		// 序在需要检测时指定当前需要的符号集合和补救用的集合（如之前未完成部分的后跟符
 		// 号），以及检测不通过时的错误号。
 		if (!s1.get(sym)) {
-			Err.report(111);
+			Err.report(errcode);
 			// 当检测不通过时，不停获取符号，直到它属于需要的集合或补救的集合
 			while (!s1.get(sym) && !s2.get(sym))
 				nextSym();
@@ -149,7 +149,7 @@ public class Parser {
 		interp.gen(Fct.JMP, 0, 0);
 		
 		if (lev > PL0.levmax)
-			Err.report(121);
+			Err.report(111);
 		
 		// 分析<说明部分>
 		do {
@@ -162,7 +162,7 @@ public class Parser {
 					parseVarDeclaration(lev);
 				}
 
-				checkNextSymbol(Symbol.semicolon, 122);
+				checkNextSymbol(Symbol.semicolon, 112);
 			}
 
 			if (sym == Symbol.strsym) {
@@ -173,7 +173,7 @@ public class Parser {
 					parseStrDeclaration(lev);
 				}
 
-				checkNextSymbol(Symbol.semicolon, 123);
+				checkNextSymbol(Symbol.semicolon, 113);
 			}
 
 
@@ -185,10 +185,10 @@ public class Parser {
 					table.enter(Objekt.procedure, lev, dx);
 					nextSym();
 				} else { 
-					Err.report(124);				// procedure后应为标识符
+					Err.report(114);				// procedure后应为标识符
 				}
 
-				checkNextSymbol(Symbol.startsym, 125);
+				checkNextSymbol(Symbol.startsym, 115);
 				
 				nxtlev = (SymSet) fsys.clone();
 				nxtlev.set(Symbol.semicolon);
@@ -199,9 +199,9 @@ public class Parser {
 					nxtlev = (SymSet) statbegsys.clone();
 					nxtlev.set(Symbol.ident);
 					nxtlev.set(Symbol.procsym);
-					test(nxtlev, fsys, 126);
+					test(nxtlev, fsys, 116);
 				} else { 
-					Err.report(127);				// 漏掉了分号
+					Err.report(117);				// 漏掉了分号
 				}
 			}
 			
@@ -212,7 +212,7 @@ public class Parser {
 				break;
 			}
 
-			test(nxtlev, declbegsys, 128);
+			test(nxtlev, declbegsys, 118);
 		} while (declbegsys.get(sym));		// 直到没有声明符号
 		
 		// 开始生成当前过程代码
@@ -253,7 +253,7 @@ public class Parser {
 				dx ++;
 			nextSym();
 		} else {
-			Err.report(131);					// var 后应是标识
+			Err.report(121);					// var 后应是标识
 		}
 	}
 
@@ -268,7 +268,7 @@ public class Parser {
 			dx ++;
 			nextSym();
 		} else {
-			Err.report(141);					// var 后应是标识
+			Err.report(131);					// var 后应是标识
 		}
 	}
 
@@ -305,7 +305,7 @@ public class Parser {
 			break;
 		default:
 			nxtlev = new SymSet(symnum);
-			test(fsys, nxtlev, 151);
+			test(fsys, nxtlev, 141);
 			break;
 		}
 	}
@@ -324,11 +324,11 @@ public class Parser {
 		nxtlev = (SymSet) fsys.clone();
 		nxtlev.set(Symbol.dosym);				// 后跟符号为do
 
-		checkNextSymbol(Symbol.lparen, 161);
+		checkNextSymbol(Symbol.lparen, 151);
 
 		parseBoolExpr(nxtlev, lev);			// 分析<条件>
 
-		checkNextSymbol(Symbol.rparen, 162);
+		checkNextSymbol(Symbol.rparen, 152);
 
 		cx2 = interp.cx;						// 保存循环体的结束的下一个位置
 		interp.gen(Fct.JPC, 0, 0);				// 生成条件跳转，但跳出循环的地址未知
@@ -356,13 +356,13 @@ public class Parser {
 		parseStatement(nxtlev, lev);
 		// 循环分析{; <语句>}，直到下一个符号不是语句开始符号或收到end
 		while (statbegsys.get(sym) || sym == Symbol.semicolon) {
-			checkNextSymbol(Symbol.semicolon, 171);
+			checkNextSymbol(Symbol.semicolon, 161);
 
 			parseStatement(nxtlev, lev);
 		}
 
 		if (haveBrace) {
-			checkNextSymbol(Symbol.rbrace, 172);
+			checkNextSymbol(Symbol.rbrace, 162);
 		}
 	}
 	/**
@@ -379,13 +379,13 @@ public class Parser {
 		nxtlev.set(Symbol.thensym);				// 后跟符号为then或do ???
 		nxtlev.set(Symbol.dosym);
 
-		checkNextSymbol(Symbol.lparen, 173);
+		// checkNextSymbol(Symbol.lparen, 171);
 
 		parseBoolExpr(nxtlev, lev);			// 分析<条件>
 
-		checkNextSymbol(Symbol.rparen, 174);
+		checkNextSymbol(Symbol.rparen, 172);
 
-		checkNextSymbol(Symbol.thensym, 175);
+		checkNextSymbol(Symbol.thensym, 173);
 
 		cx1 = interp.cx;						// 保存当前指令地址
 		interp.gen(Fct.JPC, 0, 0);				// 生成条件跳转指令，跳转地址未知，暂时写0
@@ -407,7 +407,7 @@ public class Parser {
 													// 完的位置，它正是前面未定的跳转地址
 		}
 
-		checkNextSymbol(Symbol.endsym, 176);
+		checkNextSymbol(Symbol.endsym, 174);
 	}
 
 	/**
@@ -476,7 +476,9 @@ public class Parser {
 			if (sym == Symbol.rparen)
 				nextSym();
 			else
-				Err.report(191);				// print()中应为完整表达式
+				Err.report(192);				// print()中应为完整表达式
+		} else {
+			Err.report(191);
 		}
 		interp.gen(Fct.OPR, 0, 15);
 	}

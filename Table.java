@@ -85,14 +85,6 @@ public class Table {
 		item.name = PL0.lex.id;			// 注意id和num都是从词法分析器获得
 		item.kind = k;
 		switch (k) {
-		case constant:					// 常量名字
-			if (PL0.lex.num > PL0.amax) {
-				Err.report(26);		// 数字过大溢出
-				item.val = 0;
-			} else {
-				item.val = PL0.lex.num;
-			}
-			break;
 		case variable:					// 变量名字 
 			item.level = lev;
 			item.adr = dx;
